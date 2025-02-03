@@ -2,6 +2,10 @@
 #include "volumedataset.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/file_access.hpp>
+#include <godot_cpp/classes/resource_saver.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+
+#include <godot_cpp/classes/image.hpp>
 
 using namespace godot;
 
@@ -24,7 +28,7 @@ enum Endianness
 void VDSImportPlugin::_bind_methods() {}
 
 String VDSImportPlugin::_get_importer_name() const { return "volumetric_importer.raw"; }
-String VDSImportPlugin::_get_visible_name() const { return "raw dataset"; }
+String VDSImportPlugin::_get_visible_name() const { return "VolumeDataset"; }
 PackedStringArray VDSImportPlugin::_get_recognized_extensions() const
 {
     PackedStringArray extensions = PackedStringArray();
@@ -35,33 +39,45 @@ String VDSImportPlugin::_get_save_extension() const { return "res"; }
 String VDSImportPlugin::_get_resource_type() const { return "VolumeDataset"; }
 int VDSImportPlugin::_get_preset_count() const { return 1; }
 String VDSImportPlugin::_get_preset_name(int preset_index) const { return "Default"; }
+float VDSImportPlugin::_get_priority() const { return 1.0; }
+int VDSImportPlugin::_get_import_order() const { return ResourceImporter::IMPORT_ORDER_DEFAULT; }
 TypedArray<Dictionary> VDSImportPlugin::_get_import_options(const String &path, int p_idx) const
 {
-    TypedArray<Dictionary> options = TypedArray<Dictionary>();
-    Dictionary option = Dictionary();
-    option["name"] = "Dim x";
-    option["default_value"] = 128;
-    options.push_back(option);
-    option["name"] = "Dim y";
-    option["default_value"] = 256;
-    options.push_back(option);
-    option["name"] = "Dim z";
-    option["default_value"] = 256;
-    options.push_back(option);
-    option["name"] = "Bytes to skip";
-    option["default_value"] = 0;
-    options.push_back(option);
-    option["name"] = "Data format";
-    option["default_value"] = DataFormat::Uint8;
-    option["property_hint"] = PROPERTY_HINT_ENUM;
-    option["property_hint_string"] = "Uint8,Int8,Uint16,Int16,Uint32,Int32";
-    options.push_back(option);
-    option["name"] = "Endianness";
-    option["default_value"] = Endianness::LittleEndian;
-    option["property_hint"] = PROPERTY_HINT_ENUM;
-    option["property_hint_string"] = "LittleEndian,BigEndian";
-    options.push_back(option);
+    Dictionary optDimX = Dictionary();
+    optDimX["name"] = "Dim x";
+    optDimX["default_value"] = 128;
+    
+    Dictionary optDimY = Dictionary();
+    optDimY["name"] = "Dim y";
+    optDimY["default_value"] = 256;
+    
+    Dictionary optDimZ = Dictionary();
+    optDimZ["name"] = "Dim z";
+    optDimZ["default_value"] = 256;
 
+    Dictionary optBytesToSkip = Dictionary();
+    optBytesToSkip["name"] = "Bytes to skip";
+    optBytesToSkip["default_value"] = 0;
+
+    Dictionary optDataFormat = Dictionary();
+    optDataFormat["name"] = "Data format";
+    optDataFormat["default_value"] = DataFormat::Uint8;
+    optDataFormat["property_hint"] = PropertyHint::PROPERTY_HINT_ENUM;
+    optDataFormat["hint_string"] = String("Uint8,Int8,Uint16,Int16,Uint32,Int32");
+
+    Dictionary optEndianness = Dictionary();
+    optEndianness["name"] = "Endianness";
+    optEndianness["default_value"] = Endianness::LittleEndian;
+    optEndianness["property_hint"] = PropertyHint::PROPERTY_HINT_ENUM;
+    optEndianness["hint_string"] = String("LittleEndian,BigEndian");
+
+    TypedArray<Dictionary> options;
+    options.append(optDimX);
+    options.append(optDimY);
+    options.append(optDimZ);
+    options.append(optBytesToSkip);
+    options.append(optDataFormat);
+    options.append(optEndianness);
     return options;
 }
 
@@ -77,14 +93,39 @@ Error VDSImportPlugin::_import(const String &source_file, const String &save_pat
     {
         return ERR_FILE_CANT_OPEN;
     }
-    file->set_big_endian(options["Endianness"]);
+    file->set_big_endian(int(options.get("Endianness", Variant::INT)) == int(Endianness::BigEndian));
 
-    int dim_x = options["Dim x"];
-    int dim_y = options["Dim y"];
-    int dim_z = options["Dim z"];
-    int bytes_to_skip = options["Bytes to skip"];
+    int dim_x = int(options.get("Dim x", Variant::INT));
+    int dim_y = int(options.get("Dim y", Variant::INT));
+    int dim_z = int(options.get("Dim z", Variant::INT));
+    int bytes_to_skip = int(options.get("Bytes to skip", Variant::INT));
 
-    int expected_size = dim_x * dim_y * dim_z * sizeof(uint8_t) + bytes_to_skip; // TODO: handle other data formats
+    unsigned long size_per_element;
+    switch (int(options.get("Data format", Variant::INT)))
+    {
+    case DataFormat::Uint8:
+        size_per_element = sizeof(uint8_t);
+        break;
+    case DataFormat::Int8:
+        size_per_element = sizeof(int8_t);
+        break;
+    case DataFormat::Uint16:
+        size_per_element = sizeof(uint16_t);
+        break;
+    case DataFormat::Int16:
+        size_per_element = sizeof(int16_t);
+        break;
+    case DataFormat::Uint32:
+        size_per_element = sizeof(uint32_t);
+        break;
+    case DataFormat::Int32:
+        size_per_element = sizeof(int32_t);
+        break;
+    default:
+        break;
+    }
+
+    int expected_size = dim_x * dim_y * dim_z * size_per_element + bytes_to_skip;
     if (file->get_length() < expected_size)
     {
         return ERR_FILE_CORRUPT;
@@ -94,7 +135,63 @@ Error VDSImportPlugin::_import(const String &source_file, const String &save_pat
     {
         file->seek(bytes_to_skip);
     }
-    return OK;
+
+    Ref<VolumeDataset> vds = memnew(VolumeDataset);
+    int dimension = dim_x * dim_y * dim_z;
+    TypedArray<float> data_array = TypedArray<float>();
+    for (int i = 0; i < dimension; i++)
+    {
+        if (size_per_element == sizeof(uint8_t))
+        {
+            data_array.append(file->get_8());
+        }
+        else if (size_per_element == sizeof(uint16_t))
+        {
+            data_array.append(file->get_16());
+        }
+        else if (size_per_element == sizeof(uint32_t))
+        {
+            data_array.append(file->get_32());
+        }
+    }
+    int min_value = data_array.min();
+    int max_value = data_array.max();
+    int range = max_value - min_value;
+
+    TypedArray<Image> slices = TypedArray<Image>();
+    TypedArray<Image> gradients = TypedArray<Image>();
+    for (int z = 0; z < dim_z; z++)
+    {
+        Ref<Image> slice = Image::create_empty(dim_x, dim_y, false, Image::FORMAT_RF);
+        Ref<Image> gradient = Image::create_empty(dim_x, dim_y, false, Image::FORMAT_RGBAF);
+        for (int y = 0; y < dim_y; y++)
+        {
+            for (int x = 0; x < dim_x; x++)
+            {
+                int index = x + y * dim_x + z * dim_x * dim_y;
+                float value = data_array[index];
+                slice->set_pixel(x, y, Color((value - min_value) / range, 0, 0, 0));
+                float x1 = float(data_array[MIN(x + 1, dim_x - 1) + y * dim_x + z * dim_x * dim_y]) - min_value;
+                float x2 = float(data_array[MAX(x - 1, 0) + y * dim_x + z * dim_x * dim_y]) - min_value;
+                float y1 = float(data_array[x + MIN(y + 1, dim_y - 1) * dim_x + z * dim_x * dim_y]) - min_value;
+                float y2 = float(data_array[x + MAX(y - 1, 0) * dim_x + z * dim_x * dim_y]) - min_value;
+                float z1 = float(data_array[x + y * dim_x + MIN(z + 1, dim_z - 1) * dim_x * dim_y]) - min_value;
+                float z2 = float(data_array[x + y * dim_x + MAX(z - 1, 0) * dim_x * dim_y]) - min_value;
+                gradient->set_pixel(x, y, Color((x2 - x1) / range, (y2 - y1) / range, (z2 - z1) / range, (float(data_array[index]) - min_value) / range));
+            }
+        }
+        slices.push_back(slice);
+        gradients.push_back(gradient);
+    }
+    Ref<ImageTexture3D> data_texture = memnew(ImageTexture3D);
+    Ref<ImageTexture3D> gradient_texture = memnew(ImageTexture3D);
+    data_texture->create(Image::FORMAT_RF, dim_x, dim_y, dim_z, false, slices);
+    gradient_texture->create(Image::FORMAT_RGBAF, dim_x, dim_y, dim_z, false, gradients);
+    vds->set_data(data_texture);
+    vds->set_gradient(gradient_texture);
+    vds->set_rotation(Quaternion(Vector3(Math_PI / 2, 0, 0)));
+    String filename = save_path + String(".") + _get_save_extension();
+    return ResourceSaver::get_singleton()->save(vds, filename);
 }
 
 void VDSEditorPlugin::_bind_methods() {}

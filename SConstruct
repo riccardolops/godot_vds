@@ -16,6 +16,7 @@ lib_name = "libgdvds"
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
+sources += Glob("src/editor/*.cpp")
 
 output_bin_folder = "./demo/bin"
 plugin_folder = "./demo"
@@ -34,7 +35,7 @@ def add_sources_recursively(dir: str, glob_sources, exclude_folder: list = []):
 
 if env.debug_features:
     env.Append(CPPDEFINES=["TOOLS_ENABLED"])
-    sources += Glob("src/editor/*.cpp")
+    sources += Glob("src/tools/*.cpp")
 
 add_sources_recursively("src", sources, ["editor"])
 
