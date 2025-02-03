@@ -189,7 +189,7 @@ Error VDSImportPlugin::_import(const String &source_file, const String &save_pat
     gradient_texture->create(Image::FORMAT_RGBAF, dim_x, dim_y, dim_z, false, gradients);
     vds->set_data(data_texture);
     vds->set_gradient(gradient_texture);
-    vds->set_rotation(Quaternion(Vector3(Math_PI / 2, 0, 0)));
+    vds->set_rotation(Quaternion::from_euler(Vector3(Math_PI / 2, 0, 0)));
     String filename = save_path + String(".") + _get_save_extension();
     return ResourceSaver::get_singleton()->save(vds, filename);
 }

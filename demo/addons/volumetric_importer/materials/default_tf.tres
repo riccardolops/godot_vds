@@ -12,9 +12,8 @@ width = 512
 use_hdr = true
 
 [sub_resource type="Gradient" id="Gradient_0yi0j"]
-offsets = PackedFloat32Array(0, 0.178138, 0.283401, 0.461538, 0.813765, 0.894737, 1)
+offsets = PackedFloat32Array(0, 0.178138, 0.283401, 0.473776, 0.813765, 0.894737, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0.11, 0.14, 0.13, 1, 0.469, 0.354, 0.223, 1, 0.493751, 0.373291, 0.32882, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_hxaha"]
 gradient = SubResource("Gradient_0yi0j")
