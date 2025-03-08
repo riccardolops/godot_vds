@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="TransferFunction" load_steps=6 format=3 uid="uid://de1x327ia2k60"]
 
-[ext_resource type="Script" path="res://TransferFunction.gd" id="1_mr534"]
+[ext_resource type="Script" uid="uid://b73q7x77kn558" path="res://TransferFunction.gd" id="1_mr534"]
 
 [sub_resource type="Gradient" id="Gradient_sfeh3"]
 offsets = PackedFloat32Array(0, 0, 0.165033, 0.267913, 0.362249, 0.500339, 0.665206, 0.969866, 0.969866)
