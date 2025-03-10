@@ -1,12 +1,13 @@
-#ifndef VOLUMEDATASET_H
-#define VOLUMEDATASET_H
+#ifndef VOLUME_DATASET_H
+#define VOLUME_DATASET_H
 
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/classes/image_texture3d.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 #include <godot_cpp/variant/quaternion.hpp>
 
-namespace godot {
+using namespace godot;
+
 class VolumeDataset : public Resource {
     GDCLASS(VolumeDataset, Resource)
 
@@ -31,9 +32,6 @@ public:
 
     void set_rotation(const Quaternion &p_rotation) { rotation = p_rotation; }
     Quaternion get_rotation() const { return rotation; }
-
 };
 
-} // namespace godot
-
-#endif
+#endif // VOLUME_DATASET_H

@@ -1,7 +1,4 @@
-#include "volumedataset.h"
-#include <godot_cpp/core/class_db.hpp>
-
-using namespace godot;
+#include "volume_dataset.h"
 
 void VolumeDataset::_bind_methods()
 {

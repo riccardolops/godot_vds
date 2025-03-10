@@ -12,3 +12,9 @@
 
 # Editors
 .vscode/
+
+# Built libs
+*.so
+*.dll
+*.framework
+*.xcframework

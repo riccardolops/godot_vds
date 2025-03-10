@@ -3,7 +3,7 @@ import os
 import sys
 
 env = SConscript("godot-cpp/SConstruct")
-lib_name = "libgdvds"
+lib_name = "libgvr"
 
 # For reference:
 # - CCFLAGS are compilation flags shared between C and C++
@@ -18,11 +18,7 @@ env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 sources += Glob("src/editor/*.cpp")
 
-output_bin_folder = "./demo/bin"
-plugin_folder = "./demo"
-plugin_bin_folder = f"{plugin_folder}/bin"
-
-extension_file = f"demo/bin/{lib_name}.gdextension"
+output_bin_folder = "./demo/addons/godotvolumetricrendering"
 
 def add_sources_recursively(dir: str, glob_sources, exclude_folder: list = []):
     for f in os.listdir(dir):

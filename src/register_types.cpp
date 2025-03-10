@@ -1,7 +1,10 @@
 #include "register_types.h"
-#include "volumedataset.h"
+#include "volume_dataset.h"
+#include "transfer_function.h"
+#include "volume_rendered_object.h"
 #include "editor/vds_editor_plugin.h"
-#include <godot_cpp/classes/editor_plugin_registration.hpp>
+#include "resource_loader_raw.h"
+//#include "resource_saver_raw.h"
 
 //#ifdef TOOLS_ENABLED
 //#include "tools/.h"
@@ -12,8 +15,7 @@
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
-#include "resource_loader_raw.h"
-//#include "resource_saver_raw.h"
+#include <godot_cpp/classes/editor_plugin_registration.hpp>
 
 using namespace godot;
 
@@ -35,6 +37,8 @@ void initialize_gdvds_module(ModuleInitializationLevel p_level) {
     }
     
     GDREGISTER_CLASS(VolumeDataset);
+    GDREGISTER_CLASS(TransferFunction);
+    GDREGISTER_CLASS(VolumeRenderedObject);
     GDREGISTER_CLASS(ResourceFormatLoaderRAW);
     raw_loader.instantiate();
     ResourceLoader::get_singleton()->add_resource_format_loader(raw_loader);

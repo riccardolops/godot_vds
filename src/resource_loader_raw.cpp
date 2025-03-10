@@ -1,9 +1,4 @@
 #include "resource_loader_raw.h"
-#include "volumedataset.h"
-#include <godot_cpp/core/class_db.hpp>
-#include <godot_cpp/classes/file_access.hpp>
-
-using namespace godot;
 
 void ResourceFormatLoaderRAW::_bind_methods() {}
 
