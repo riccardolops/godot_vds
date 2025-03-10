@@ -47,13 +47,13 @@ protected:
 
 public:
     VolumeRenderedObject();
-    ~VolumeRenderedObject();
 
     void set_dataset(const Ref<VolumeDataset> &value);
     Ref<VolumeDataset> get_dataset() const;
 
     void set_transfer_function(const Ref<TransferFunction> &value);
     Ref<TransferFunction> get_transfer_function() const;
+    void transfer_function_changed();
 
     void set_render_mode(RenderMode value);
     RenderMode get_render_mode() const;
@@ -79,7 +79,6 @@ public:
     void set_light_source(LightSource value);
     LightSource get_light_source() const;
 
-    //void _ready();
 };
 
 VARIANT_ENUM_CAST(VolumeRenderedObject::RenderMode);

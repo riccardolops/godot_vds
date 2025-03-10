@@ -53,6 +53,7 @@ VolumeRenderedObject::VolumeRenderedObject() {
     ERR_FAIL_COND(!RL->exists("res://addons/godotvolumetricrendering/shaders/raymarch.gdshader"));
     volume_material.instantiate();
     volume_material->set_shader(RL->load("res://addons/godotvolumetricrendering/shaders/raymarch.gdshader"));
+    volume_material->set_shader_parameter("noiseSampler", noise_texture);
 
     Ref<BoxMesh> mesh = memnew(BoxMesh);
     mesh->set_flip_faces(true);
@@ -60,11 +61,9 @@ VolumeRenderedObject::VolumeRenderedObject() {
     mesh->surface_set_material(0, volume_material);
 
     ERR_FAIL_COND(!RL->exists("res://addons/godotvolumetricrendering/materials/default_tf.tres"));
-    transfer_function = RL->load("res://addons/godotvolumetricrendering/materials/default_tf.tres")->duplicate();
+    transfer_function = RL->load("res://addons/godotvolumetricrendering/materials/default_tf.tres")->duplicate(true);
     set_transfer_function(transfer_function);
 }
-
-VolumeRenderedObject::~VolumeRenderedObject() {}
 
 void VolumeRenderedObject::set_dataset(const Ref<VolumeDataset> &value) {
     dataset = value;
@@ -84,15 +83,20 @@ Ref<VolumeDataset> VolumeRenderedObject::get_dataset() const {
 
 void VolumeRenderedObject::set_transfer_function(const Ref<TransferFunction> &value) {
     transfer_function = value;
+    transfer_function_changed();
+    transfer_function->connect("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed));
+}
+
+Ref<TransferFunction> VolumeRenderedObject::get_transfer_function() const {
+    return transfer_function;
+}
+
+void VolumeRenderedObject::transfer_function_changed() {
     if (transfer_function.is_valid()) {
         volume_material->set_shader_parameter("transferfunctionSamplerColor", transfer_function->get_gradient_color());
         volume_material->set_shader_parameter("transferfunctionSamplerAlpha", transfer_function->get_gradient_alpha());
         volume_material->set_shader_parameter("useTransferFunction2D", false);
     }
-}
-
-Ref<TransferFunction> VolumeRenderedObject::get_transfer_function() const {
-    return transfer_function;
 }
 
 void VolumeRenderedObject::set_render_mode(RenderMode value) {

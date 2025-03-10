@@ -18,7 +18,7 @@ uniform float _LightingGradientThresholdStart = 0.0;
 uniform float _LightingGradientThresholdEnd = 0.0;
 uniform bool useTransferFunction2D = false;
 uniform bool useLighting = true;
-uniform bool useMainLight = true;
+uniform bool useMainLight = false;
 uniform bool earlyRayTermination = true;
 uniform bool cubicInterpolation = false;
 
