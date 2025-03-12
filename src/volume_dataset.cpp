@@ -17,4 +17,8 @@ void VolumeDataset::_bind_methods()
     ClassDB::bind_method(D_METHOD("set_rotation", "rotation"), &VolumeDataset::set_rotation);
     ClassDB::bind_method(D_METHOD("get_rotation"), &VolumeDataset::get_rotation);
     ADD_PROPERTY(PropertyInfo(Variant::QUATERNION, "rotation"), "set_rotation", "get_rotation");
+
+    ClassDB::bind_method(D_METHOD("set_histogram_texture", "histogram"), &VolumeDataset::set_histogram_texture);
+    ClassDB::bind_method(D_METHOD("get_histogram_texture"), &VolumeDataset::get_histogram_texture);
+    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "histogram"), "set_histogram_texture", "get_histogram_texture");
 }

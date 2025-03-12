@@ -27,3 +27,12 @@ void TransferFunction::set_gradient_alpha(const Ref<GradientTexture1D> &value) {
 Ref<GradientTexture1D> TransferFunction::get_gradient_alpha() const {
     return gradient_alpha;
 }
+
+void TransferFunction::set_histogram_texture(const Ref<Texture2D> &value) {
+    histogram_texture = value;
+    emit_changed();
+}
+
+Ref<Texture2D> TransferFunction::get_histogram_texture() const {
+    return histogram_texture;
+}

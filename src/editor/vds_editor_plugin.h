@@ -4,6 +4,10 @@
 
 #include <godot_cpp/classes/editor_plugin.hpp>
 
+#include <godot_cpp/classes/image_texture.hpp>
+
+#include "transfer_function_editor_plugin.h"
+
 namespace godot {
     // TODO: see ResourceFormatLoader
 
@@ -32,6 +36,7 @@ namespace godot {
         GDCLASS(VDSEditorPlugin, EditorPlugin);
 
         Ref<VDSImportPlugin> import_plugin;
+        Ref<EditorInspectorPluginTransferFunction> inspector_plugin;
 
     protected:
         static void _bind_methods();

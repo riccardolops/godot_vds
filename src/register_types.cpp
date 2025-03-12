@@ -3,6 +3,7 @@
 #include "transfer_function.h"
 #include "volume_rendered_object.h"
 #include "editor/vds_editor_plugin.h"
+#include "gui/movable_button.h"
 #include "resource_loader_raw.h"
 //#include "resource_saver_raw.h"
 
@@ -26,6 +27,8 @@ void initialize_gdvds_module(ModuleInitializationLevel p_level) {
     //#ifdef TOOLS_ENABLED
     //#endif //TOOLS_ENABLED
     if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
+        GDREGISTER_INTERNAL_CLASS(TransferFunctionEditor);
+        GDREGISTER_INTERNAL_CLASS(EditorInspectorPluginTransferFunction);
         GDREGISTER_INTERNAL_CLASS(VDSImportPlugin);
         //GDREGISTER_INTERNAL_CLASS(VDSExportPlugin);
         GDREGISTER_INTERNAL_CLASS(VDSEditorPlugin);
@@ -39,6 +42,7 @@ void initialize_gdvds_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(VolumeDataset);
     GDREGISTER_CLASS(TransferFunction);
     GDREGISTER_CLASS(VolumeRenderedObject);
+    GDREGISTER_CLASS(MovableButton);
     GDREGISTER_CLASS(ResourceFormatLoaderRAW);
     raw_loader.instantiate();
     ResourceLoader::get_singleton()->add_resource_format_loader(raw_loader);

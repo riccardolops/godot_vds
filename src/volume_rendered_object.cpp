@@ -61,8 +61,7 @@ VolumeRenderedObject::VolumeRenderedObject() {
     mesh->surface_set_material(0, volume_material);
 
     ERR_FAIL_COND(!RL->exists("res://addons/godotvolumetricrendering/materials/default_tf.tres"));
-    transfer_function = RL->load("res://addons/godotvolumetricrendering/materials/default_tf.tres")->duplicate(true);
-    set_transfer_function(transfer_function);
+    set_transfer_function(RL->load("res://addons/godotvolumetricrendering/materials/default_tf.tres")->duplicate(true));
 }
 
 void VolumeRenderedObject::set_dataset(const Ref<VolumeDataset> &value) {
@@ -74,6 +73,7 @@ void VolumeRenderedObject::set_dataset(const Ref<VolumeDataset> &value) {
         volume_material->set_shader_parameter("_TextureSize", Vector3i(data->get_width(), data->get_height(), data->get_depth()));
         set_scale(dataset->get_scale());
         set_quaternion(dataset->get_rotation());
+        transfer_function->set_histogram_texture(dataset->get_histogram_texture());
     }
 }
 
@@ -84,7 +84,9 @@ Ref<VolumeDataset> VolumeRenderedObject::get_dataset() const {
 void VolumeRenderedObject::set_transfer_function(const Ref<TransferFunction> &value) {
     transfer_function = value;
     transfer_function_changed();
-    transfer_function->connect("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed));
+    if (!transfer_function->is_connected("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed))) {
+        transfer_function->connect("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed));
+    }
 }
 
 Ref<TransferFunction> VolumeRenderedObject::get_transfer_function() const {

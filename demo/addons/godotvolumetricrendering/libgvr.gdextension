@@ -6,6 +6,7 @@ compatibility_minimum = "4.4"
 [icons]
 
 VolumeRenderedObject = "res://addons/godotvolumetricrendering/icons/VolumeRenderedObject.svg"
+MovableButton = "res://addons/godotvolumetricrendering/icons/MovableButton.svg"
 
 [libraries]
 

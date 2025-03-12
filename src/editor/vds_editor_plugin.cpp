@@ -154,9 +154,9 @@ Error VDSImportPlugin::_import(const String &source_file, const String &save_pat
             data_array.append(file->get_32());
         }
     }
-    int min_value = data_array.min();
-    int max_value = data_array.max();
-    int range = max_value - min_value;
+    float min_value = data_array.min();
+    float max_value = data_array.max();
+    float range = max_value - min_value;
 
     TypedArray<Image> slices = TypedArray<Image>();
     TypedArray<Image> gradients = TypedArray<Image>();
@@ -183,11 +183,35 @@ Error VDSImportPlugin::_import(const String &source_file, const String &save_pat
         slices.push_back(slice);
         gradients.push_back(gradient);
     }
+
+    int _n_frequencies = MIN((int)range, 1024);
+    int *_frequencies = new int[_n_frequencies]();
+    int _max_frequency = 0;
+    for (int i = 0; i < data_array.size(); i++) {
+        float data_value = data_array[i];
+        int frequency_index = (int)(((data_value - min_value) / range) * (_n_frequencies - 1));
+        _frequencies[frequency_index]++;
+        _max_frequency = MAX(_max_frequency, _frequencies[frequency_index]);
+    }
+
+    float *samples = new float[_n_frequencies];
+    for (int i = 0; i < _n_frequencies; i++) {
+        samples[i] = (_max_frequency > 0) ? log10f((float)_frequencies[i]) / log10f((float)_max_frequency) : 0.0f;
+    }
+    
+    PackedByteArray _byteArray;
+    _byteArray.resize(_n_frequencies * sizeof(float));
+    uint8_t *_byteArray_ptr = _byteArray.ptrw();
+    memcpy(_byteArray_ptr, samples, _n_frequencies * sizeof(float));
+    Ref<Image> histogram_image = Image::create_from_data(_n_frequencies, 1, false, Image::Format::FORMAT_RF, _byteArray);
+
+
     Ref<ImageTexture3D> data_texture = memnew(ImageTexture3D);
     Ref<ImageTexture3D> gradient_texture = memnew(ImageTexture3D);
     data_texture->create(Image::FORMAT_RF, dim_x, dim_y, dim_z, false, slices);
     gradient_texture->create(Image::FORMAT_RGBAF, dim_x, dim_y, dim_z, false, gradients);
     vds->set_data(data_texture);
+    vds->set_histogram_texture(ImageTexture::create_from_image(histogram_image));
     vds->set_gradient(gradient_texture);
     vds->set_rotation(Quaternion::from_euler(Vector3(Math_PI / 2, 0, 0)));
     String filename = save_path + String(".") + _get_save_extension();
@@ -200,10 +224,14 @@ void VDSEditorPlugin::_enter_tree()
 {
     import_plugin.instantiate();
     add_import_plugin(import_plugin);
+    inspector_plugin.instantiate();
+    add_inspector_plugin(inspector_plugin);
 }
 
 void VDSEditorPlugin::_exit_tree()
 {
     remove_import_plugin(import_plugin);
     import_plugin.unref();
+    remove_inspector_plugin(inspector_plugin);
+    inspector_plugin.unref();
 }

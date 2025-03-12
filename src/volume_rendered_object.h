@@ -9,6 +9,7 @@
 #include <godot_cpp/classes/resource_loader.hpp>
 #include "volume_dataset.h"
 #include "transfer_function.h"
+#include "util/generate_histogram_texture.h"
 
 using namespace godot;
 
@@ -41,6 +42,7 @@ private:
     bool ray_termination = false;
     bool cubic_interpolation = false;
     bool lighting_enabled = false;
+    void transfer_function_changed();
 
 protected:
     static void _bind_methods();
@@ -53,7 +55,6 @@ public:
 
     void set_transfer_function(const Ref<TransferFunction> &value);
     Ref<TransferFunction> get_transfer_function() const;
-    void transfer_function_changed();
 
     void set_render_mode(RenderMode value);
     RenderMode get_render_mode() const;

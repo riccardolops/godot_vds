@@ -12,6 +12,7 @@ class TransferFunction : public Resource {
 private:
     Ref<GradientTexture1D> gradient_color;
     Ref<GradientTexture1D> gradient_alpha;
+    Ref<Texture2D> histogram_texture;
 
 protected:
     static void _bind_methods();
@@ -22,6 +23,9 @@ public:
 
     void set_gradient_alpha(const Ref<GradientTexture1D> &value);
     Ref<GradientTexture1D> get_gradient_alpha() const;
+
+    void set_histogram_texture(const Ref<Texture2D> &value);
+    Ref<Texture2D> get_histogram_texture() const;
 };
 
 #endif // TRANSFER_FUNCTION_H

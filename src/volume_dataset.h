@@ -3,6 +3,7 @@
 
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/classes/image_texture3d.hpp>
+#include <godot_cpp/classes/texture2d.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 #include <godot_cpp/variant/quaternion.hpp>
 
@@ -16,6 +17,7 @@ private:
     Quaternion rotation = Quaternion(0.0, 0.0, 0.0, 1.0);
     Ref<ImageTexture3D> volume_texture;
     Ref<ImageTexture3D> gradient_texture;
+    Ref<Texture2D> histogram_texture;
 
 protected:
     static void _bind_methods();
@@ -32,6 +34,9 @@ public:
 
     void set_rotation(const Quaternion &p_rotation) { rotation = p_rotation; }
     Quaternion get_rotation() const { return rotation; }
+
+    void set_histogram_texture(const Ref<Texture2D> &value) { histogram_texture = value; }
+    Ref<Texture2D> get_histogram_texture() const { return histogram_texture; }
 };
 
 #endif // VOLUME_DATASET_H
