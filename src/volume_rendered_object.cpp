@@ -68,12 +68,16 @@ void VolumeRenderedObject::set_dataset(const Ref<VolumeDataset> &value) {
     dataset = value;
     if (dataset.is_valid()) {
         Ref<ImageTexture3D> data = dataset->get_volume_texture();
-        volume_material->set_shader_parameter("volumeDataSampler", data);
+        if (data.is_valid()) {
+            volume_material->set_shader_parameter("volumeDataSampler", data);
+            volume_material->set_shader_parameter("_TextureSize", Vector3i(data->get_width(), data->get_height(), data->get_depth()));
+        }
         volume_material->set_shader_parameter("volumeGradientSampler", dataset->get_gradient_texture());
-        volume_material->set_shader_parameter("_TextureSize", Vector3i(data->get_width(), data->get_height(), data->get_depth()));
         set_scale(dataset->get_scale());
         set_quaternion(dataset->get_rotation());
-        transfer_function->set_histogram_texture(dataset->get_histogram_texture());
+        if (transfer_function.is_valid()) {
+            transfer_function->set_histogram_texture(dataset->get_histogram_texture());
+        }
     }
 }
 

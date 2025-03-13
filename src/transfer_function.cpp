@@ -10,6 +10,13 @@ void TransferFunction::_bind_methods() {
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "gradient_alpha", PROPERTY_HINT_RESOURCE_TYPE, "GradientTexture1D"), "set_gradient_alpha", "get_gradient_alpha");
 }
 
+TransferFunction::TransferFunction() {
+    gradient_color.instantiate();
+    gradient_color->set_gradient( Ref<Gradient>( memnew( Gradient ) ) );
+    gradient_alpha.instantiate();
+    gradient_alpha->set_gradient( Ref<Gradient>( memnew( Gradient ) ) );
+}
+
 void TransferFunction::set_gradient_color(const Ref<GradientTexture1D> &value) {
     gradient_color = value;
     emit_changed();

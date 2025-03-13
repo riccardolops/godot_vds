@@ -20,5 +20,5 @@ void VolumeDataset::_bind_methods()
 
     ClassDB::bind_method(D_METHOD("set_histogram_texture", "histogram"), &VolumeDataset::set_histogram_texture);
     ClassDB::bind_method(D_METHOD("get_histogram_texture"), &VolumeDataset::get_histogram_texture);
-    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "histogram"), "set_histogram_texture", "get_histogram_texture");
+    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "histogram", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_histogram_texture", "get_histogram_texture");
 }

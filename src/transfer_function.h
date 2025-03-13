@@ -18,6 +18,8 @@ protected:
     static void _bind_methods();
 
 public:
+    TransferFunction();
+
     void set_gradient_color(const Ref<GradientTexture1D> &value);
     Ref<GradientTexture1D> get_gradient_color() const;
 
