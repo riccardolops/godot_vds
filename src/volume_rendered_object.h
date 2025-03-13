@@ -9,7 +9,6 @@
 #include <godot_cpp/classes/resource_loader.hpp>
 #include "volume_dataset.h"
 #include "transfer_function.h"
-#include "util/generate_histogram_texture.h"
 
 using namespace godot;
 

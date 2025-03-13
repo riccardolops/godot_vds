@@ -1,6 +1,4 @@
 #include "editor_scale.h"
-#include <godot_cpp/classes/editor_interface.hpp>
-#include <godot_cpp/classes/editor_plugin.hpp>
 
 float get_editor_scale() {
 	using namespace godot;

@@ -30,6 +30,6 @@ String ResourceFormatLoaderRAW::_get_resource_type(const String &path) const
 Variant ResourceFormatLoaderRAW::_load(const String &path, const String &original_path, bool use_sub_threads, int32_t cache_mode) const
 {
     Ref<VolumeDataset> dataset = Ref<VolumeDataset>(memnew(VolumeDataset));
-    dataset->set_data(Ref<ImageTexture3D>(memnew(ImageTexture3D)));
+    dataset->set_volume_texture(Ref<ImageTexture3D>(memnew(ImageTexture3D)));
     return dataset;
 }

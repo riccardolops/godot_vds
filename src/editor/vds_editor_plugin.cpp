@@ -210,9 +210,10 @@ Error VDSImportPlugin::_import(const String &source_file, const String &save_pat
     Ref<ImageTexture3D> gradient_texture = memnew(ImageTexture3D);
     data_texture->create(Image::FORMAT_RF, dim_x, dim_y, dim_z, false, slices);
     gradient_texture->create(Image::FORMAT_RGBAF, dim_x, dim_y, dim_z, false, gradients);
-    vds->set_data(data_texture);
+    vds->set_data(data_array);
+    vds->set_volume_texture(data_texture);
     vds->set_histogram_texture(ImageTexture::create_from_image(histogram_image));
-    vds->set_gradient(gradient_texture);
+    vds->set_gradient_texture(gradient_texture);
     vds->set_rotation(Quaternion::from_euler(Vector3(Math_PI / 2, 0, 0)));
     String filename = save_path + String(".") + _get_save_extension();
     return ResourceSaver::get_singleton()->save(vds, filename);

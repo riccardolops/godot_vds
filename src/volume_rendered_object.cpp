@@ -67,9 +67,9 @@ VolumeRenderedObject::VolumeRenderedObject() {
 void VolumeRenderedObject::set_dataset(const Ref<VolumeDataset> &value) {
     dataset = value;
     if (dataset.is_valid()) {
-        Ref<ImageTexture3D> data = dataset->get_data();
+        Ref<ImageTexture3D> data = dataset->get_volume_texture();
         volume_material->set_shader_parameter("volumeDataSampler", data);
-        volume_material->set_shader_parameter("volumeGradientSampler", dataset->get_gradient());
+        volume_material->set_shader_parameter("volumeGradientSampler", dataset->get_gradient_texture());
         volume_material->set_shader_parameter("_TextureSize", Vector3i(data->get_width(), data->get_height(), data->get_depth()));
         set_scale(dataset->get_scale());
         set_quaternion(dataset->get_rotation());
@@ -83,10 +83,10 @@ Ref<VolumeDataset> VolumeRenderedObject::get_dataset() const {
 
 void VolumeRenderedObject::set_transfer_function(const Ref<TransferFunction> &value) {
     transfer_function = value;
-    transfer_function_changed();
-    if (!transfer_function->is_connected("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed))) {
-        transfer_function->connect("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed));
+    if (transfer_function.is_valid() && dataset.is_valid()) {
+        transfer_function->set_histogram_texture(dataset->get_histogram_texture());
     }
+    transfer_function_changed();
 }
 
 Ref<TransferFunction> VolumeRenderedObject::get_transfer_function() const {
@@ -95,6 +95,9 @@ Ref<TransferFunction> VolumeRenderedObject::get_transfer_function() const {
 
 void VolumeRenderedObject::transfer_function_changed() {
     if (transfer_function.is_valid()) {
+        if (!transfer_function->is_connected("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed))) {
+            transfer_function->connect("changed", callable_mp(this, &VolumeRenderedObject::transfer_function_changed));
+        }
         volume_material->set_shader_parameter("transferfunctionSamplerColor", transfer_function->get_gradient_color());
         volume_material->set_shader_parameter("transferfunctionSamplerAlpha", transfer_function->get_gradient_alpha());
         volume_material->set_shader_parameter("useTransferFunction2D", false);

@@ -2,13 +2,13 @@
 
 void VolumeDataset::_bind_methods()
 {
-    ClassDB::bind_method(D_METHOD("set_data", "data"), &VolumeDataset::set_data);
-    ClassDB::bind_method(D_METHOD("get_data"), &VolumeDataset::get_data);
-    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "data", PROPERTY_HINT_RESOURCE_TYPE, "ImageTexture3D"), "set_data", "get_data");
+    ClassDB::bind_method(D_METHOD("set_volume_texture", "volume"), &VolumeDataset::set_volume_texture);
+    ClassDB::bind_method(D_METHOD("get_volume_texture"), &VolumeDataset::get_volume_texture);
+    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "volume", PROPERTY_HINT_RESOURCE_TYPE, "ImageTexture3D"), "set_volume_texture", "get_volume_texture");
 
-    ClassDB::bind_method(D_METHOD("set_gradient", "gradient"), &VolumeDataset::set_gradient);
-    ClassDB::bind_method(D_METHOD("get_gradient"), &VolumeDataset::get_gradient);
-    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "gradient", PROPERTY_HINT_RESOURCE_TYPE, "ImageTexture3D"), "set_gradient", "get_gradient");
+    ClassDB::bind_method(D_METHOD("set_gradient_texture", "gradient"), &VolumeDataset::set_gradient_texture);
+    ClassDB::bind_method(D_METHOD("get_gradient_texture"), &VolumeDataset::get_gradient_texture);
+    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "gradient", PROPERTY_HINT_RESOURCE_TYPE, "ImageTexture3D"), "set_gradient_texture", "get_gradient_texture");
 
     ClassDB::bind_method(D_METHOD("set_scale", "scale"), &VolumeDataset::set_scale);
     ClassDB::bind_method(D_METHOD("get_scale"), &VolumeDataset::get_scale);

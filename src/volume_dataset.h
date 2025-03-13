@@ -15,6 +15,7 @@ class VolumeDataset : public Resource {
 private:
     Vector3 scale = Vector3(1.0, 1.0, 1.0);
     Quaternion rotation = Quaternion(0.0, 0.0, 0.0, 1.0);
+    TypedArray<float> data_array;
     Ref<ImageTexture3D> volume_texture;
     Ref<ImageTexture3D> gradient_texture;
     Ref<Texture2D> histogram_texture;
@@ -23,11 +24,14 @@ protected:
     static void _bind_methods();
 
 public:
-    void set_data(const Ref<ImageTexture3D> &p_data) { volume_texture = p_data; }
-    Ref<ImageTexture3D> get_data() const { return volume_texture; }
+    void set_data(const TypedArray<float> &data) { data_array = data; }
+    TypedArray<float> get_data() const { return data_array; }
 
-    void set_gradient(const Ref<ImageTexture3D> &p_gradient) { gradient_texture = p_gradient; }
-    Ref<ImageTexture3D> get_gradient() const { return gradient_texture; }
+    void set_volume_texture(const Ref<ImageTexture3D> &p_texture) { volume_texture = p_texture; }
+    Ref<ImageTexture3D> get_volume_texture() const { return volume_texture; }
+
+    void set_gradient_texture(const Ref<ImageTexture3D> &p_texture) { gradient_texture = p_texture; }
+    Ref<ImageTexture3D> get_gradient_texture() const { return gradient_texture; }
 
     void set_scale(const Vector3 &p_scale) { scale = p_scale; }
     Vector3 get_scale() const { return scale; }
