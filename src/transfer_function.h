@@ -3,6 +3,7 @@
 
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/classes/gradient_texture1_d.hpp>
+#include <godot_cpp/classes/gradient.hpp>
 
 using namespace godot;
 

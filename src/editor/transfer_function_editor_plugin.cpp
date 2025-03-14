@@ -443,7 +443,7 @@ int HistogramTextureRect::_get_point_at(int p_xpos, int p_ypos) const {
 	int result = -1;
 	int total_w = get_size().x;
     int total_h = get_size().y;
-	float min_distance = handle_width * 0.8; // Allow the cursor to be more than half a handle width away for ease of use.
+	float min_distance = handle_width * 1.8; // Allow the cursor to be more than half a handle width away for ease of use.
 	for (int i = 0; i < gradient->get_point_count(); i++) {
 		// Ignore points outside of [0, 1].
 		if (gradient->get_offset(i) < 0) {
@@ -467,7 +467,7 @@ int PaletteTextureRect::_get_point_at(int p_xpos) const {
     Ref<Gradient> gradient = _transfer_function->get_gradient_color()->get_gradient();
 	int result = -1;
 	int total_w = get_size().x;
-	float min_distance = handle_width * 0.8; // Allow the cursor to be more than half a handle width away for ease of use.
+	float min_distance = handle_width * 1.8; // Allow the cursor to be more than half a handle width away for ease of use.
 	for (int i = 0; i < gradient->get_point_count(); i++) {
 		// Ignore points outside of [0, 1].
 		if (gradient->get_offset(i) < 0) {
