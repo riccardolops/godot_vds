@@ -177,7 +177,7 @@ Error VDSImportPlugin::_import(const String &source_file, const String &save_pat
                 float y2 = float(data_array[x + MAX(y - 1, 0) * dim_x + z * dim_x * dim_y]) - min_value;
                 float z1 = float(data_array[x + y * dim_x + MIN(z + 1, dim_z - 1) * dim_x * dim_y]) - min_value;
                 float z2 = float(data_array[x + y * dim_x + MAX(z - 1, 0) * dim_x * dim_y]) - min_value;
-                gradient->set_pixel(x, y, Color((x2 - x1) / range, (y2 - y1) / range, (z2 - z1) / range, (float(data_array[index]) - min_value) / range));
+                gradient->set_pixel(x, y, Color((x2 - x1) / range, (y2 - y1) / range, (z2 - z1) / range, (value - min_value) / range));
             }
         }
         slices.push_back(slice);

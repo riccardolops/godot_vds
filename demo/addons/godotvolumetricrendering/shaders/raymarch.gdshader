@@ -160,14 +160,14 @@ vec3 getGradient(vec3 pos)
 vec3 getLightDirection(vec3 viewDir, vec3 light_vec)
 {
     if (useMainLight)
-	{
-		return normalize(light_vec);
-	}
+    {
+        return normalize(light_vec);
+    }
     // TODO: return normalize(mul(unity_WorldToObject, _WorldSpaceLightPos0.xyz));
-	else
-	{
-		return viewDir;
-	}
+    else
+    {
+        return viewDir;
+    }
 }
 
 // Performs lighting calculations, and returns a modified colour.
@@ -342,7 +342,7 @@ frag_light_out frag_light_dvr(vec3 vertexLocal, vec3 light_vec)
 
     vec4 col = vec4(0.0f, 0.0f, 0.0f, 0.0f);
     float tDepth = raymarchInfo.numStepsRecip * float(raymarchInfo.numSteps - 1);
-	frag_light_out output;
+    frag_light_out output;
     for (int iStep = 0; iStep < raymarchInfo.numSteps; iStep++)
     {
         float t = float(iStep) * raymarchInfo.numStepsRecip;

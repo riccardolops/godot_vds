@@ -2,6 +2,10 @@
 
 void VolumeDataset::_bind_methods()
 {
+    ClassDB::bind_method(D_METHOD("set_data", "data"), &VolumeDataset::set_data);
+    ClassDB::bind_method(D_METHOD("get_data"), &VolumeDataset::get_data);
+    ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "data", PROPERTY_HINT_ARRAY_TYPE, "float"), "set_data", "get_data");
+
     ClassDB::bind_method(D_METHOD("set_volume_texture", "volume"), &VolumeDataset::set_volume_texture);
     ClassDB::bind_method(D_METHOD("get_volume_texture"), &VolumeDataset::get_volume_texture);
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "volume", PROPERTY_HINT_RESOURCE_TYPE, "ImageTexture3D"), "set_volume_texture", "get_volume_texture");
